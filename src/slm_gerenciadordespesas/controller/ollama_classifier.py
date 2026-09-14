@@ -4,7 +4,7 @@ from slm_gerenciadordespesas.config import OllamaConfig
 from slm_gerenciadordespesas.controller.classifier import ExpenseClassifier
 from slm_gerenciadordespesas.model.category import Category
 from slm_gerenciadordespesas.model.expense import Expense
-
+from slm_gerenciadordespesas.model.inference_metrics import InferenceMetrics
 
 FEW_SHOT_EXAMPLES = """
 Exemplos de classificação:
@@ -28,6 +28,7 @@ class OllamaClassifier(ExpenseClassifier):
     ):
         self.config = config or OllamaConfig()
         self.max_retries = max_retries
+        self.last_metrics: InferenceMetrics | None = None
 
     def classify(self, description: str) -> Expense:
         categories = ", ".join(
@@ -62,6 +63,14 @@ class OllamaClassifier(ExpenseClassifier):
                     format=Expense.model_json_schema(),
                 )
 
+                self.last_metrics = InferenceMetrics(
+                    total_duration_ns=response.total_duration,
+                    load_duration_ns=response.load_duration,
+                    prompt_eval_count=response.prompt_eval_count,
+                    eval_count=response.eval_count,
+                    prompt_eval_duration_ns=response.prompt_eval_duration,
+                    eval_duration_ns=response.eval_duration,
+                )
                 return Expense.model_validate_json(
                     response.message.content
                 )
