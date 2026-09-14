@@ -18,13 +18,16 @@ expenses = [
     "Farmácia",
     "Comprei um lanche no McDonalds",
     "Condomínio",
+    "Gasolina do carro",
+    "Consulta médica",
+    "Seguro do T-Cross",
 ]
 
 for description in expenses:
     result = classifier.classify(description)
 
     print(
-        f"{description:35} -> "
+        f"{description:40} -> "
         f"{result.category.value}"
     )
 
