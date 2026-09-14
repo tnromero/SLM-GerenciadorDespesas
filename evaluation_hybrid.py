@@ -37,7 +37,8 @@ for item in dataset:
 
     start = time.perf_counter()
 
-    result = classifier.classify(description)
+    classification = classifier.classify_with_metadata(description)
+    result = classification.expense
 
     elapsed = time.perf_counter() - start
     total_time += elapsed
@@ -48,14 +49,17 @@ for item in dataset:
     if ok:
         correct += 1
 
+    status = "OK" if ok else "ERRO"
+
     print(
-        f"{'OK' if ok else 'ERRO':5} "
-        f"{description:35} "
-        f"esperado={expected:15} "
-        f"obtido={predicted:15} "
+        f"{status:<5} "
+        f"{description:<35} | "
+        f"esperado={expected:<15} "
+        f"obtido={predicted:<15} "
+        f"origem={classification.source:<5} "
+        f"confiança={classification.confidence:.1f} "
         f"{elapsed:.3f}s"
     )
-
 
 total = len(dataset)
 
