@@ -1,0 +1,29 @@
+description,expected_category
+Combustível,Carro
+Abasteci o carro,Carro
+Gasolina do carro,Carro
+Almoço em restaurante,Alimentação
+Almoço com a família,Alimentação
+Comida japonesa no restaurante,Alimentação
+iFood,iFood
+Pedi comida pelo iFood,iFood
+Energia Elétrica,Contas fixas
+Conta de energia da casa,Contas fixas
+Aluguel da Garagem,Contas fixas
+Condomínio,Contas fixas
+Internet Banda Larga,Contas fixas
+Mercado,Alimentação
+ConectCar,Carro
+Farmácia,Saúde
+Remédio para gripe,Saúde
+Consulta médica,Saúde
+IPTU,Imposto
+IPVA,Imposto
+Pagamento do IPVA,Imposto
+Seguro do Carro,Carro
+Seguro do T-Cross,Carro
+Netflix,Streaming
+Mensalidade da Netflix,Streaming
+HBO Max,Streaming
+AACD,Doação
+Doação para a AACD,Doação
