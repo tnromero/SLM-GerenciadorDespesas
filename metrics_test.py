@@ -1,13 +1,14 @@
 from slm_gerenciadordespesas.controller.ollama_classifier import OllamaClassifier
 from slm_gerenciadordespesas.config import OllamaConfig
+from slm_gerenciadordespesas.model.inference_metrics import InferenceMetrics
 
-classifier = OllamaClassifier(config=OllamaConfig(model="qwen3:4b"))
+classifier = OllamaClassifier(config=OllamaConfig(model="qwen3:1.7b"))
 
 result = classifier.classify(
     "Assinei um serviço de streaming"
 )
 
-metrics = classifier.last_metrics
+metrics:InferenceMetrics = classifier.last_metrics
 
 print(f"Resultado: {result.category.value}")
 print()

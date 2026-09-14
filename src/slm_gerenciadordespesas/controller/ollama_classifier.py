@@ -29,7 +29,7 @@ class OllamaClassifier(ExpenseClassifier):
     ):
         self.config = config or OllamaConfig()
         self.max_retries = max_retries
-        self.last_metrics: InferenceMetrics | None = None
+        # self.last_metrics: InferenceMetrics | None = None
 
     def classify(self, description: str) -> Expense:
         categories = ", ".join(
@@ -72,7 +72,7 @@ Retorne apenas uma categoria válida.
                     format=Expense.model_json_schema(),
                 )
 
-                self.last_metrics = InferenceMetrics(
+                self.last_metrics: InferenceMetrics = InferenceMetrics(
                     total_duration_ns=response.get("total_duration", 0),
                     load_duration_ns=response.get("load_duration", 0),
                     prompt_eval_count=response.get("prompt_eval_count", 0),

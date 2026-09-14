@@ -1,5 +1,6 @@
 import time
 
+from slm_gerenciadordespesas.config import OllamaConfig
 from slm_gerenciadordespesas.controller.ollama_classifier import (
     OllamaClassifier
 )
@@ -75,7 +76,7 @@ def benchmark(name, classifier):
 #     OllamaClassifier(),
 # )
 
-models = [
+models: list[str] = [
     "qwen3:1.7b",
     "qwen3:4b",
 ]
@@ -83,5 +84,5 @@ models = [
 for model in models:
     benchmark(
         f"QWEN {model}",
-        OllamaClassifier(model),
+        OllamaClassifier(config=OllamaConfig(model=model)),
     )
