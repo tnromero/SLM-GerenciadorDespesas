@@ -1,4 +1,5 @@
 import csv
+import sys
 import time
 
 from slm_gerenciadordespesas.config import OllamaConfig
@@ -6,10 +7,13 @@ from slm_gerenciadordespesas.controller.ollama_classifier import OllamaClassifie
 from slm_gerenciadordespesas.controller.ruled_based_classifier import RuleBasedClassifier
 
 
+if len(sys.argv) > 1:
+    DATASET_DEFAULT_PATH = sys.argv[1]
+else:
+    DATASET_DEFAULT_PATH = "data/evaluation.csv"
 
-
-def load_dataset():
-    with open("data/evaluation.csv", encoding="utf-8") as file:
+def load_dataset(path: str = DATASET_DEFAULT_PATH):
+    with open(path, encoding="utf-8") as file:
         return list(csv.DictReader(file))
 
 
