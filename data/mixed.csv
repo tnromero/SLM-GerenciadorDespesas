@@ -1,0 +1,26 @@
+description,expected_category
+Combustível,Carro
+Abasteci o carro,Carro
+Abasteci o T-Cross,Carro
+Enchi o tanque do carro,Carro
+Almoço em restaurante,Alimentação
+Jantei em uma pizzaria,Alimentação
+Mercado,Alimentação
+Comprei comida japonesa,Alimentação
+iFood,iFood
+Pedi comida pelo iFood,iFood
+Netflix,Streaming
+Assinei Disney Plus,Streaming
+IPVA,Imposto
+Pagamento do IPVA,Imposto
+IPTU,Imposto
+Energia Elétrica,Contas fixas
+Conta de energia da casa,Contas fixas
+Paguei a conta de água,Contas fixas
+Condomínio,Contas fixas
+Farmácia,Saúde
+Comprei um remédio para dor de cabeça,Saúde
+AACD,Doação
+Fiz uma doação para uma instituição,Doação
+Seguro do Carro,Carro
+Paguei o seguro do veículo,Carro
