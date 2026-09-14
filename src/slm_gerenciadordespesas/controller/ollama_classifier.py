@@ -53,6 +53,7 @@ class OllamaClassifier(ExpenseClassifier):
                                 f"Categorias válidas: {categories}\n"
                                 "Escolha exatamente uma categoria. "
                                 "Não crie novas categorias."
+                                f"{FEW_SHOT_EXAMPLES}"
                             ),
                         },
                         {
