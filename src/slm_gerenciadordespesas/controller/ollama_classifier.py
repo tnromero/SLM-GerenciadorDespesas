@@ -21,33 +21,58 @@ Exemplos de classificação:
 """
 
 class OllamaClassifier(ExpenseClassifier):
-    def __init__(self, config: OllamaConfig | None = None):
+    def __init__(
+        self,
+        config: OllamaConfig | None = None,
+        max_retries: int = 2,
+    ):
         self.config = config or OllamaConfig()
+        self.max_retries = max_retries
 
     def classify(self, description: str) -> Expense:
-        categories = ", ".join(category.value for category in Category)
-
-        response = ollama.chat(
-            model=self.config.model,
-            think=self.config.think,
-            options={"temperature": self.config.temperature},
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "Você é um classificador de despesas.\n\n"
-                        f"{FEW_SHOT_EXAMPLES}\n"
-                        "Classifique a próxima despesa em exatamente uma "
-                        f"das seguintes categorias: {categories}.\n"
-                        "Não crie novas categorias."
-                    ),
-                },
-                {
-                    "role": "user",
-                    "content": description,
-                },
-            ],
-            format=Expense.model_json_schema(),
+        categories = ", ".join(
+            category.value for category in Category
         )
 
-        return Expense.model_validate_json(response.message.content)
+        last_error = None
+
+        for attempt in range(self.max_retries + 1):
+            try:
+                response = ollama.chat(
+                    model=self.config.model,
+                    think=self.config.think,
+                    options={
+                        "temperature": self.config.temperature,
+                    },
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": (
+                                "Você é um classificador de despesas.\n"
+                                f"Categorias válidas: {categories}\n"
+                                "Escolha exatamente uma categoria. "
+                                "Não crie novas categorias."
+                            ),
+                        },
+                        {
+                            "role": "user",
+                            "content": description,
+                        },
+                    ],
+                    format=Expense.model_json_schema(),
+                )
+
+                return Expense.model_validate_json(
+                    response.message.content
+                )
+
+            except Exception as error:
+                last_error = error
+
+                if attempt < self.max_retries:
+                    continue
+
+        raise RuntimeError(
+            f"Falha ao classificar '{description}' "
+            f"após {self.max_retries + 1} tentativas"
+        ) from last_error
