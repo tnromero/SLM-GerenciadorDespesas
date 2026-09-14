@@ -1,4 +1,5 @@
 import ollama
+from pydantic import ValidationError
 
 from slm_gerenciadordespesas.config import OllamaConfig
 from slm_gerenciadordespesas.controller.classifier import ExpenseClassifier
@@ -35,6 +36,19 @@ class OllamaClassifier(ExpenseClassifier):
             category.value for category in Category
         )
 
+        system_prompt = f"""
+Você é um classificador de despesas.
+
+Classifique a despesa em exatamente uma das categorias abaixo:
+
+{categories}
+
+Não crie novas categorias.
+Retorne apenas uma categoria válida.
+
+{FEW_SHOT_EXAMPLES}
+        """
+
         last_error = None
 
         for attempt in range(self.max_retries + 1):
@@ -48,13 +62,7 @@ class OllamaClassifier(ExpenseClassifier):
                     messages=[
                         {
                             "role": "system",
-                            "content": (
-                                "Você é um classificador de despesas.\n"
-                                f"Categorias válidas: {categories}\n"
-                                "Escolha exatamente uma categoria. "
-                                "Não crie novas categorias."
-                                f"{FEW_SHOT_EXAMPLES}"
-                            ),
+                            "content": system_prompt,
                         },
                         {
                             "role": "user",
@@ -76,11 +84,17 @@ class OllamaClassifier(ExpenseClassifier):
                     response.message.content
                 )
 
-            except Exception as error:
-                last_error = error
+            except (ValidationError, ValueError) as exc:
+                last_error = exc
 
-                if attempt < self.max_retries:
-                    continue
+            except Exception as exc:
+                last_error = exc
+
+        if last_error is not None:
+            raise RuntimeError(
+                f"Falha ao classificar despesa após "
+                f"{self.max_retries + 1} tentativas"
+            ) from last_error
 
         raise RuntimeError(
             f"Falha ao classificar '{description}' "
