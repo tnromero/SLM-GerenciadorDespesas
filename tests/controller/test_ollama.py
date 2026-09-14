@@ -1,4 +1,6 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
+
+from ollama import ChatResponse, Message
 
 from slm_gerenciadordespesas.config import OllamaConfig
 from slm_gerenciadordespesas.controller.ollama_classifier import (
@@ -15,21 +17,25 @@ def test_ollama_classifier_retries_after_invalid_response():
         max_retries=2,
     )
 
-    invalid_response = MagicMock()
-    invalid_response.message.content = """
+    invalid_response = ChatResponse(message=Message(
+        role="assistant",
+        content="""
     {
         "description": "Netflix",
         "category": "Cinema"
     }
-    """
+    """,
+    ))
 
-    valid_response = MagicMock()
-    valid_response.message.content = """
+    valid_response = ChatResponse(message=Message(
+        role="assistant",
+        content="""
     {
         "description": "Netflix",
         "category": "Streaming"
     }
-    """
+    """,
+    ))
 
     with patch(
         "slm_gerenciadordespesas.controller.ollama_classifier.ollama.chat",

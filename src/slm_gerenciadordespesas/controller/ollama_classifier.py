@@ -73,15 +73,15 @@ Retorne apenas uma categoria válida.
                 )
 
                 self.last_metrics = InferenceMetrics(
-                    total_duration_ns=response.total_duration,
-                    load_duration_ns=response.load_duration,
-                    prompt_eval_count=response.prompt_eval_count,
-                    eval_count=response.eval_count,
-                    prompt_eval_duration_ns=response.prompt_eval_duration,
-                    eval_duration_ns=response.eval_duration,
+                    total_duration_ns=response.get("total_duration", 0),
+                    load_duration_ns=response.get("load_duration", 0),
+                    prompt_eval_count=response.get("prompt_eval_count", 0),
+                    eval_count=response.get("eval_count", 0),
+                    prompt_eval_duration_ns=response.get("prompt_eval_duration", 0),
+                    eval_duration_ns=response.get("eval_duration", 0),
                 )
                 return Expense.model_validate_json(
-                    response.message.content
+                    response.message.content or "{}"
                 )
 
             except (ValidationError, ValueError) as exc:
